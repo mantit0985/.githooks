@@ -1,0 +1,18 @@
+#!/bin/bash
+# Enforce Conventional Commits format (feat:, fix:, chore:, etc.)
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN="^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)(\(.+\))?: .+"
+
+if [[ ! $COMMIT_MSG =~ $PATTERN ]]; then
+  echo "❌ ERROR: Invalid commit message format."
+  echo "Your message: $COMMIT_MSG"
+  echo "Required format: <type>(<scope>): <subject>"
+  echo "Example: feat(auth): add GPG verification"
+  echo, "Types: feat, fix, chore, docs, style, refactor, perf, test, build, ci, revert"
+  exit 1
+fi
+
+echo "✅ Commit message format verified."
+exit 0

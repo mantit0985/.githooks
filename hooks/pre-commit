@@ -1,0 +1,22 @@
+#!/bin/bash
+# Pre-commit hook to ensure markdown quality before commit
+echo "🔍 Checking markdown quality..."
+# Only lint files that are staged for commit
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$' || true)
+
+if [ -z "$STAGED_FILES" ];]; then
+  echo "No markdown files to lint. Skipping."
+  exit 0
+fi
+
+# Call the central linter (assuming it is installed locally or using a dockerized version)
+# For this professional setup, we suggest a wrapper script that ensures the tool is present.
+./scripts/lint-markdown.sh "$STAGED_FILES"
+
+if [ $? -ne 0 ]; then
+  echo "❌ Markdown linting failed. Please fix the errors before committing."
+  exit 1
+fi
+
+echo "✅ Markdown quality verified."
+exit 0
